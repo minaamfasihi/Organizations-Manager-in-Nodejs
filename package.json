@@ -1,0 +1,22 @@
+{
+  "name": "pipedrive_docker_app",
+  "version": "1.0.0",
+  "description": "Node.js on Docker",
+  "author": "Minaam Fasihi <minaam.fasihi@gmail.com>",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.1",
+    "flat": "^4.1.0",
+    "lodash": "^4.17.11",
+    "mysql": "^2.15.0",
+    "stackjs": "^0.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.0"
+  }
+}

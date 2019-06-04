@@ -1,0 +1,40 @@
+MYSQL:
+
+sudo docker build -t pipedrive-db .
+
+docker run  -d \
+--publish 6603:3306 \
+--volume=/www/company-tests/pipedrive/database/data:/var/lib/mysql \
+--name=pipedrive-db pipedrive-db
+
+mysql -u root -p -h 192.168.10.9 -P 6603 -D pipedrive
+
+PIPEDRIVE:
+
+docker build -t pipedrive-nodejs .
+
+docker run  -d \
+--publish 4000:4000 \
+-e MYSQL_USER='root' \
+-e MYSQL_PASSWORD='pipedrive' \
+-e MYSQL_DATABASE='pipedrive' \
+-e MYSQL_HOST='172.17.0.2' \
+--link pipedrive-db:db \
+--name=pipedrive-nodejs pipedrive-nodejs
+
+docker run \
+--publish 4000:4000 \
+-e MYSQL_USER='root' \
+-e MYSQL_PASSWORD='pipedrive' \
+-e MYSQL_DATABASE='pipedrive' \
+-e MYSQL_HOST='172.17.0.2' \
+--link pipedrive-db:db \
+--name=pipedrive-nodejs pipedrive-nodejs
+
+Testing:
+
+curl -X GET localhost:4000
+
+
+    "dev": "nodemon server.js"
+
