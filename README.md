@@ -44,7 +44,7 @@ or if you don't want to run it in detached mode, then do:
 Once you have successfully completed all the above steps, you can now test the code.
 Entire backend code is in `server.js`.
 
-# API Endpoint
+# API Endpoints
 - GET `localhost:4000?page=1`
 
 
