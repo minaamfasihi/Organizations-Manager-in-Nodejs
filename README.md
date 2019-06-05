@@ -45,7 +45,9 @@ Once you have successfully completed all the above steps, you can now test the c
 Entire backend code is in `server.js`.
 
 # API Endpoint
-GET `localhost:4000?page=1`
+- GET `localhost:4000?page=1`
+
+
 Body: 
 `{
 	"org_name": "Black Banana"
@@ -84,7 +86,9 @@ Response:
 `
 
 
-POST `localhost:4000`
+- POST `localhost:4000`
+
+
 Body: 
 `
 {
