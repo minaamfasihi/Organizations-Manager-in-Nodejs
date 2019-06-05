@@ -4,7 +4,7 @@
 - Make a directory for this project and then cd into it (let's call it `pipedrive`)
 - Create another directory inside `pipedrive` called `database` and then cd into it (`pipedrive/database`)
 - Create a folder called `data` inside `database` by typing `mkdir data`
-- Run `sudo docker build -t pipedrive-db .`
+- Now, from `pipedrive/database`, run `sudo docker build -t pipedrive-db .`
 - After the above command is run successfully, run 
 `docker run  -d \
 --publish 6603:3306 \
