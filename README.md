@@ -2,8 +2,8 @@
 
 # Installing MYSQL using Docker
 - Make a directory for this project and then cd into it (let's call it `pipedrive`)
-- Create another directory called `database` and then cd into it
-- Create a folder called `data` by typing `mkdir data`
+- Create another directory inside `pipedrive` called `database` and then cd into it (`pipedrive/database`)
+- Create a folder called `data` inside `database` by typing `mkdir data`
 - Run `sudo docker build -t pipedrive-db .`
 - After the above command is run successfully, run 
 `docker run  -d \
@@ -16,7 +16,10 @@
 
 # Installing NodeJS using Docker
 - In the first step when installing mysql, we created our parent directory called `pipedrive` 
-Make sure you are inside it. If you were in `pipedrive/database`, you can do `cd ..`
+Make sure you are inside it. If you were in `pipedrive/database`, you can do `cd ..` so that you are now in `pipedrive`
+
+It would be better if you could do this in a new terminal so that you have multiple terminals corresponding to different containers.
+
 - Run `docker build -t pipedrive-nodejs .`
 - Run this for detached mode,
 `docker run  -d \
@@ -46,7 +49,7 @@ Entire backend code is in `server.js`.
 GET `localhost:4000?page=1`
 Body: 
 `{
-	"org_name": "Phoneutria Spider"
+	"org_name": "Black Banana"
 }`
 
 Response:
