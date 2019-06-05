@@ -15,10 +15,9 @@
 - If you are connected successfully, it means that your database has been setup successfully using docker
 
 # Installing NodeJS using Docker
-- In the first step when installing mysql, we created our parent directory called `pipedrive` 
-Make sure you are inside it. If you were in `pipedrive/database`, you can do `cd ..` so that you are now in `pipedrive`
-
-It would be better if you could do this in a new terminal so that you have multiple terminals corresponding to different containers.
+- In the first step when installing mysql, we created our parent directory called `pipedrive`.
+- Make sure you are inside it. If you were in `pipedrive/database`, you can do `cd ..` so that you are now in `pipedrive`
+- It would be better if you could do this in a new terminal so that you have multiple terminals corresponding to different containers.
 
 - Run `docker build -t pipedrive-nodejs .`
 - Run this for detached mode,
