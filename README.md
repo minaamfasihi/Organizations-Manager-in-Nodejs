@@ -8,7 +8,7 @@
 - After the above command is run successfully, run 
 `docker run  -d \
 --publish 6603:3306 \
---volume=/www/company-tests/pipedrive/database/data:/var/lib/mysql \
+--volume=/www/pipedrive/database/data:/var/lib/mysql \
 --name=pipedrive-db pipedrive-db`
 - After that, make sure that the mysql database is up and running. You can do this by: 
 `mysql -u root -p -h 192.xxx.xx.x -P 6603 -D pipedrive`
