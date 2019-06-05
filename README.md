@@ -39,7 +39,98 @@ or if you don't want to run it in detached mode, then do:
 --name=pipedrive-nodejs pipedrive-nodejs
 `
 
-Once you have successfully completed all the above steps, you can 
-
+Once you have successfully completed all the above steps, you can now test the code.
 Entire backend code is in `server.js`.
 
+# API Endpoint
+GET `localhost:4000?page=1`
+Body: 
+`{
+	"org_name": "Phoneutria Spider"
+}`
+
+Response:
+`
+{
+    "response": [
+        {
+            "relationship_type": "parent",
+            "org_name": "Banana tree"
+        },
+        {
+            "relationship_type": "parent",
+            "org_name": "Big banana tree"
+        },
+        {
+            "relationship_type": "sister",
+            "org_name": "Brown Banana"
+        },
+        {
+            "relationship_type": "sister",
+            "org_name": "Green Banana"
+        },
+        {
+            "relationship_type": "daughter",
+            "org_name": "Phoneutria Spider"
+        },
+        {
+            "relationship_type": "sister",
+            "org_name": "Yellow Banana"
+        }
+    ]
+}
+`
+
+
+POST `localhost:4000`
+Body: 
+`
+{
+    "org_name": "Paradise Island",
+    "daughters": [
+        {
+            "org_name": "Banana tree",
+            "daughters": [
+                {
+                    "org_name": "Yellow Banana"
+                },
+                {
+                    "org_name": "Brown Banana"
+                },
+                {
+                    "org_name": "Black Banana"
+                }
+            ]
+        },
+        {
+            "org_name": "Big banana tree",
+            "daughters": [
+                {
+                    "org_name": "Yellow Banana"
+                },
+                {
+                    "org_name": "Brown Banana"
+                },
+                {
+                    "org_name": "Green Banana"
+                },
+                {
+                    "org_name": "Black Banana",
+                    "daughters": [
+                        {
+                            "org_name": "Phoneutria Spider"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+`
+Response:
+`
+{
+    "success": true,
+    "message": "success"
+}
+`
