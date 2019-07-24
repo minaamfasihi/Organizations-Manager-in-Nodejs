@@ -1,5 +1,3 @@
-# pipedrive
-
 # Installing MYSQL using Docker
 - Make a directory for this project and then cd into it (let's call it `pipedrive`)
 - Create another directory inside `pipedrive` called `database` and then cd into it (`pipedrive/database`)
