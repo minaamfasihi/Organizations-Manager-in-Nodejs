@@ -3,8 +3,8 @@
 const app = require('express')();
 const mysql = require('mysql');
 const flatten = require('flat');
-var Stack = require('stackjs');
-var stack = new Stack();
+let Stack = require('stackjs');
+let stack = new Stack();
 
 const bodyParser = require('body-parser');
 const _ = require('lodash');
@@ -39,28 +39,28 @@ db.connect((err) => {
 });
 
 app.post('/', (req, res) => {
-	var response = '';
-	var reqBody = flatten(req.body);
-	var recvOrgNames = Object.values(reqBody);
+	let response = '';
+	let reqBody = flatten(req.body);
+	let recvOrgNames = Object.values(reqBody);
 	// to get unique organization names
 	recvOrgNames = recvOrgNames.filter((x, i, a) => a.indexOf(x) == i);
-	var jsonObj = JSON.parse(JSON.stringify(req.body));
-	var result;
-	getAllOrganizationNames(function (err, data) {
+	let jsonObj = JSON.parse(JSON.stringify(req.body));
+	let result;
+	getAllOrganizationNames((err, data) => {
 		if (err) { 
 			response = err;
 		}
 		else {
-			var existingOrgNames = [];
+			let existingOrgNames = [];
 			data.forEach(function(org) {
 				existingOrgNames.push(org.name);
 			});
-			insertOrganizations(existingOrgNames, recvOrgNames, function(err, newOrgNames) {
+			insertOrganizations(existingOrgNames, recvOrgNames, (err, newOrgNames) => {
 				if (err) {
 					console.log("Error: ", err);
 				} else {
 					console.log("These have been inserted: ", newOrgNames);
-					insertOrgRelationsWrapper(reqBody, function(err, insertedOrgs) {
+					insertOrgRelationsWrapper(reqBody, (err, insertedOrgs) => {
 						if (err) {
 							console.log('Error');
 							res.json({
@@ -83,7 +83,7 @@ app.post('/', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-	var org_name = req.body['org_name'];
+	let org_name = req.body['org_name'];
 	const PAGE_LENGTH = 100;
 	const page = parseInt(req.query['page']);
 	if (isNaN(page) || page < 1) {
@@ -93,7 +93,7 @@ app.get('/', (req, res) => {
 		});
 	}
 	try {
-		getOrgByName(org_name, function (getOrgErr, org) {
+		getOrgByName(org_name, (getOrgErr, org) => {
 		if (getOrgErr) {
 			console.log('Error');
 			console.log(getOrgErr);
@@ -105,12 +105,12 @@ app.get('/', (req, res) => {
 					console.log(getOrgRelErr);
 				} else {
 					console.log('Success');
-					var target = org[0];
-					var parentIds = [];
-					var daughterIds = [];
-					var sisterIds = [];
+					let target = org[0];
+					let parentIds = [];
+					let daughterIds = [];
+					let sisterIds = [];
 
-					for (var key in orgRelations) {
+					for (let key in orgRelations) {
 						if (orgRelations[key].parent_id === orgRelations[key].child_id) continue;
 
 						if (target.id === orgRelations[key].child_id) {
@@ -120,24 +120,24 @@ app.get('/', (req, res) => {
 						}
 					}
 
-					for (var key in orgRelations) {
+					for (let key in orgRelations) {
 						if (parentIds.includes(orgRelations[key].parent_id)) {
 							sisterIds.push(orgRelations[key].child_id);
 						}
 					}
 
-					var rel_ids = parentIds.concat(sisterIds).concat(daughterIds);
+					let rel_ids = parentIds.concat(sisterIds).concat(daughterIds);
 					rel_ids = [... new Set(rel_ids)].join(',');
-					var off = ((page - 1) * PAGE_LENGTH);
+					let off = ((page - 1) * PAGE_LENGTH);
 
 					getOrgsByRelations(rel_ids, off, PAGE_LENGTH, 
-						function(e, organizations) {
+						(e, organizations) => {
 						if (e) {
 							console.log('Error');
 							console.log(e);
 						} else {
-							var response = [];
-							for (var key in organizations) {
+							let response = [];
+							for (let key in organizations) {
 								if (organizations[key].name.toLowerCase() === org_name.toLowerCase()) continue;
 
 								if (parentIds.includes(organizations[key].id)) {
@@ -178,7 +178,7 @@ app.get('/', (req, res) => {
 
 const getOrgsByRelations = (ids, offset, pageLength, callback) => {
 	db.query(`SELECT * FROM organizations WHERE id in (${ids}) LIMIT ${pageLength} OFFSET ${offset}`, 
-		function (err, result, fields) {
+		(err, result, fields) => {
 		if (err) {
 			callback(err, null);
 		}
@@ -189,20 +189,20 @@ const getOrgsByRelations = (ids, offset, pageLength, callback) => {
 }
 
 const insertOrgRelationsWrapper = (reqBody, callback) => {
-	getAllOrganizationNames(function (err, orgNames) {
+	getAllOrganizationNames((err, orgNames) => {
 		if (err) {
 			console.log('Some error occurred');
 			callback(err, null);
 		} else {
-			var childToParent = { };
+			let childToParent = { };
 			initParentChildren(childToParent, reqBody, orgNames);
-			getAllOrgRelationships(function(err, orgRelations) {
+			getAllOrgRelationships((err, orgRelations) => {
 				if (err) {
 					console.log('Some error occurred');
 					callback(err, null);
 				} else {
 					console.log('Success');
-					insertOrgRelationships(orgRelations, childToParent, function(err, insertedOrgRels) {
+					insertOrgRelationships(orgRelations, childToParent, (err, insertedOrgRels) => {
 						if (err) {
 							console.log('Error');
 							callback(err, null);
@@ -218,11 +218,11 @@ const insertOrgRelationsWrapper = (reqBody, callback) => {
 }
 
 const insertOrgRelationships = (existingOrgRels, recvOrgRels, callback) => {
-	var newOrgRels = "";
-	var childIds = Object.keys(recvOrgRels);
-	var first = true;
+	let newOrgRels = "";
+	let childIds = Object.keys(recvOrgRels);
+	let first = true;
 	if (Object.keys(existingOrgRels).length === 0) {
-		for (var childId in recvOrgRels) {
+		for (let childId in recvOrgRels) {
 			recvOrgRels[childId].forEach(function(parentId) {
 				if (first) {
 					newOrgRels += "(" + parentId + ", " + childId + ")";
@@ -233,9 +233,9 @@ const insertOrgRelationships = (existingOrgRels, recvOrgRels, callback) => {
 			})
 		}
 	} else {
-		for (var key in existingOrgRels) {
-			var childId = existingOrgRels[key].child_id;
-			var parentId = existingOrgRels[key].parent_id;
+		for (let key in existingOrgRels) {
+			let childId = existingOrgRels[key].child_id;
+			let parentId = existingOrgRels[key].parent_id;
 			if (childIds.includes(childId) 
 				&& recvOrgRels[childId] !== undefined 
 				&& recvOrgRels[childId].includes(parentId)
@@ -255,7 +255,7 @@ const insertOrgRelationships = (existingOrgRels, recvOrgRels, callback) => {
 		return;
 	} else {
 		console.log('Org relas', newOrgRels);
-		db.query("INSERT INTO org_relationships(parent_id, child_id) VALUES " + newOrgRels, function (err, result, fields) {
+		db.query("INSERT INTO org_relationships(parent_id, child_id) VALUES " + newOrgRels, (err, result, fields) => {
 			if (err) {
 				console.log("Error when inserting in org_relationships", err);
 				callback(err, null);
@@ -278,23 +278,23 @@ const insertIntoChildParent = (childParent, childId, parentId) => {
 }
 
 const initParentChildren = (childToParent, reqBody, orgNames) => {
-	var currLength = 0;
-	var parent;
-	var parentId;
-	var childId;
-	for (var orgName in reqBody) {
+	let currLength = 0;
+	let parent;
+	let parentId;
+	let childId;
+	for (let orgName in reqBody) {
 		if (stack.isEmpty()) {
 			parent = reqBody[orgName];
 			parentId = getIdOfOrg(orgNames, parent);
 			stack.push(parent);
 		}
-		var count = countSubString(orgName, 'daughters');
+		let count = countSubString(orgName, 'daughters');
 		if (count > currLength) {
 			currLength += 1;
 			parent = doPeek(stack);
 			parentId = getIdOfOrg(orgNames, parent);
 		} else if (count < currLength) {
-			var counter = currLength - count;
+			let counter = currLength - count;
 			while (counter >= 0) {
 				counter--;
 				doPop(stack);
@@ -318,7 +318,7 @@ const initParentChildren = (childToParent, reqBody, orgNames) => {
 
 const getIdOfOrg = (orgNames, orgName) => {
 	if (orgName !== undefined) {
-		for (var key in orgNames) {
+		for (let key in orgNames) {
 			if (orgNames[key].name == orgName) {
 				return orgNames[key].id;
 			}
@@ -329,7 +329,7 @@ const getIdOfOrg = (orgNames, orgName) => {
 const countSubString = (str, subStr) => str.split(subStr).length - 1;
 
 const getAllOrganizationNames = (callback) => {
-	db.query("SELECT * FROM organizations ORDER BY name asc", function (err, result, fields) {
+	db.query("SELECT * FROM organizations ORDER BY name asc", (err, result, fields) => {
 		if (err) {
 			callback(err, null);
 		}
@@ -340,7 +340,7 @@ const getAllOrganizationNames = (callback) => {
 }
 
 const getOrgByName = (org_name, callback) => {
-	db.query(`SELECT * FROM organizations WHERE name = '${org_name}'`, function (err, result, fields) {
+	db.query(`SELECT * FROM organizations WHERE name = '${org_name}'`, (err, result, fields) => {
 		if (err) {
 			callback(err, null);
 		}
@@ -351,7 +351,7 @@ const getOrgByName = (org_name, callback) => {
 }
 
 const getAllOrgRelationships = (callback) => {
-	db.query("SELECT * FROM org_relationships", function (err, result, fields) {
+	db.query("SELECT * FROM org_relationships", (err, result, fields) => {
 		if (err) {
 			callback(err, null);
 		}
@@ -362,9 +362,9 @@ const getAllOrgRelationships = (callback) => {
 }
 
 const insertOrganizations = (existingOrgs, recvOrgs, callback) => {
-	var arr = recvOrgs.filter(x => !existingOrgs.includes(x));
-	var newOrgs = "";
-	var first = true;
+	let arr = recvOrgs.filter(x => !existingOrgs.includes(x));
+	let newOrgs = "";
+	let first = true;
 	arr.forEach(function(org) {
 		if (first) {
 			newOrgs += "('" + org + "')";
@@ -379,7 +379,7 @@ const insertOrganizations = (existingOrgs, recvOrgs, callback) => {
 		console.log("All the rows are already there");
 		return;
 	} else {
-		db.query("INSERT INTO organizations(name) VALUES " + newOrgs, function (err, result, fields) {
+		db.query("INSERT INTO organizations(name) VALUES " + newOrgs, (err, result, fields) => {
 			if (err) {
 				console.log("Some error occurred");
 				callback(err, null);
