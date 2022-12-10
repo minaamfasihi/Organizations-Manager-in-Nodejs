@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.1",
+    "express": "^4.17.3",
     "flat": "^4.1.0",
     "lodash": "^4.17.11",
     "mysql": "^2.15.0",
